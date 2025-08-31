@@ -1,0 +1,18 @@
+# Visual Studio / C++
+.vs/
+*.ipch
+*.pch
+*.sdf
+*.suo
+*.user
+*.cache
+*.log
+
+# Builds
+bin/
+obj/
+out/
+Debug/
+Release/
+x64/
+x86/
