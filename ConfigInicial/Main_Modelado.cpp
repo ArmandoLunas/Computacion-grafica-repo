@@ -1,5 +1,5 @@
-// Alumno: Armando Luna Juárez 3190566323
-// Práctica 04: Modelado Geométrico
+// Alumno: Armando Luna Juï¿½rez 3190566323
+// Prï¿½ctica 04: Modelado Geomï¿½trico
 // Fecha de entrega: 07/09/2025
 
 #include <iostream>
@@ -18,7 +18,7 @@
 // ---------- PRAGMAS para MSVC (solo libs necesarias) ----------
 #ifdef _MSC_VER
 #pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "glew32.lib")     // GLEW dinámico
+#pragma comment(lib, "glew32.lib")     // GLEW dinï¿½mico
 #pragma comment(lib, "glfw3.lib")      // si usas DLL de GLFW, cambia a glfw3dll.lib
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "user32.lib")
@@ -46,7 +46,7 @@ float rot = 0.0f;
 int main() {
     if (!glfwInit()) { std::cerr << "Failed to init GLFW\n"; return EXIT_FAILURE; }
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Armando Luna Juárez", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Armando Luna Juï¿½rez", nullptr, nullptr);
     if (!window) { std::cerr << "Failed to create GLFW window\n"; glfwTerminate(); return EXIT_FAILURE; }
     glfwMakeContextCurrent(window);
 
@@ -131,7 +131,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0, 1.0f, 0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(6.0f, 0.9f, 6.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -139,7 +138,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-2, 1.0f, 0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(2.0f, 0.9f, 8.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -155,7 +153,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0.1, 1.0f, 1.0));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(0.4f, 0.9f, 5.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -163,7 +160,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(2.1, 1.0f, 1.8));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(2.0f, 0.9f, 5.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -171,7 +167,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(2.1, 1.6f, 1.8));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -179,7 +174,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-2.1, 1.6f, 0.3));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -187,7 +181,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-3.7, 0.3f, -0.3));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.5f, 3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -195,7 +188,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-3.7, 0.0f, -0.3));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.5f, 0.9f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -203,7 +195,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(3.7, 0.3f, -0.3));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.5f, 3.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -211,7 +202,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(3.7, 0.0f, -0.3));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.5f, 0.9f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -219,7 +209,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-2.0, 0.5f, 3.5));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(1.8f, 0.5f, 0.8f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -227,7 +216,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-2.0, 0.1f, 3.5));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.4f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -235,7 +223,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(2.0, 0.5f, 3.5));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(1.8f, 0.5f, 0.8f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -243,7 +230,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(2.0, 0.1f, 3.5));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.4f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -251,7 +237,6 @@ int main() {
         SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0.0, 0.3f, 3.0));
-        //model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1, 0, 0));
         model = glm::scale(model, glm::vec3(0.3f, 0.5f, 0.4f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -260,7 +245,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0.0, 0.1f, 0.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(5.0f, 0.9f, 5.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -268,7 +252,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-2.5, 0.1f, -0.3));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(2.5f, 0.9f, 2.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -276,7 +259,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(2.5, 0.1f, -0.3));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(2.5f, 0.9f, 2.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -284,7 +266,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(2.0, 0.1f, 2.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(1.5f, 0.9f, 2.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -292,7 +273,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-2.0, 0.1f, 2.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(1.5f, 0.9f, 2.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -300,7 +280,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-0.5, 0.1f, 2.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(0.5f, 0.9f, 2.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -308,7 +287,6 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0.5, 0.1f, 2.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(0.5f, 0.9f, 2.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -316,14 +294,12 @@ int main() {
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(-1.5, 0.1f, -2.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(1.5f, 0.9f, 2.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         SetColorConst(ICE_MID);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(1.5, 0.1f, -2.0));
-        // model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(0.9f, 0.9f, 2.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -332,7 +308,6 @@ int main() {
         SetColorConst(ICE_DEEP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0, -0.8f, 0));
-        //model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(4.2f, 1.0f, 4.2f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -353,13 +328,12 @@ int main() {
         SetColorConst(ICE_DEEP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0, -1.8f, 0));
-        //model = glm::rotate(model, glm::radians(wob), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(1.3f, 1.2f, 1.3f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // trozos
-        /*SetColorConst(ICE_TOP);
+        SetColorConst(ICE_TOP);
         model = glm::mat4(1.0f);
         model = glm::translate(model, islandCenter + glm::vec3(0.8f, -3.0f, 1.1f));
         model = glm::rotate(model, glm::radians(12.0f), glm::vec3(0, 1, 0));
@@ -393,9 +367,9 @@ int main() {
         model = glm::rotate(model, glm::radians(8.0f), glm::vec3(0, 1, 0));
         model = glm::scale(model, glm::vec3(2.5f, 0.20f, 1.4f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, 36);*/
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // -------- PINGÜINO --------
+        // -------- PINGï¿½INO --------
         glm::vec3 base = islandCenter + glm::vec3(0.0f, 1.45f, 0.0f);
 
         SetColorConst(P_BLACK);  // cuerpo
