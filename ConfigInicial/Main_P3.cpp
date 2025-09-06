@@ -34,7 +34,7 @@ int main() {
 
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "Armando Luna Juárez", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Armando Luna Juárez", nullptr, nullptr);
 
 	int screenWidth, screenHeight;
 
@@ -122,7 +122,7 @@ int main() {
 	//	-0.5f * 500,  0.5f * 500,  0.5f * 500, 1.0f, 0.2f,0.5f,
 	//	-0.5f * 500,  0.5f * 500, -0.5f * 500, 1.0f, 0.2f,0.5f,
 	//};
-	
+
 
 	// use with Perspective Projection
 	float vertices[] = {
@@ -132,35 +132,35 @@ int main() {
 		0.5f,  0.5f, 0.5f,  1.0f, 0.0f,0.0f,
 		-0.5f,  0.5f, 0.5f, 1.0f, 0.0f,0.0f,
 		-0.5f, -0.5f, 0.5f, 1.0f, 0.0f,0.0f,
-		
-	    -0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,//Back
+
+		-0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,//Back
 		 0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
 		 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
 		 0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	    -0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-	    -0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
-		
+		-0.5f,  0.5f,-0.5f, 0.0f, 1.0f,0.0f,
+		-0.5f, -0.5f,-0.5f, 0.0f, 1.0f,0.0f,
+
 		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,1.0f,
 		 0.5f, -0.5f, -0.5f,  0.0f, 0.0f,1.0f,
 		 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
 		 0.5f,  0.5f, -0.5f,  0.0f, 0.0f,1.0f,
 		 0.5f,  0.5f,  0.5f,  0.0f, 0.0f,1.0f,
 		 0.5f,  -0.5f, 0.5f, 0.0f, 0.0f,1.0f,
-      
+
 		-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
 		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,0.0f,
 		-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
 		-0.5f, -0.5f, -0.5f,  1.0f, 1.0f,0.0f,
 		-0.5f, -0.5f,  0.5f,  1.0f, 1.0f,0.0f,
 		-0.5f,  0.5f,  0.5f,  1.0f, 1.0f,0.0f,
-		
+
 		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
 		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,1.0f,
 		0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
 		0.5f, -0.5f,  0.5f,  0.0f, 1.0f,1.0f,
 		-0.5f, -0.5f,  0.5f, 0.0f, 1.0f,1.0f,
 		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,1.0f,
-		
+
 		-0.5f,  0.5f, -0.5f, 1.0f, 0.2f,0.5f,
 		0.5f,  0.5f, -0.5f,  1.0f, 0.2f,0.5f,
 		0.5f,  0.5f,  0.5f,  1.0f, 0.2f,0.5f,
@@ -190,11 +190,11 @@ int main() {
 	// 4. Despues colocamos las caracteristicas de los vertices
 
 	//Posicion
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
 	//Color
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -202,8 +202,8 @@ int main() {
 
 	glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs)
 
-	
-	glm::mat4 projection=glm::mat4(1);
+
+	glm::mat4 projection = glm::mat4(1);
 
 	projection = glm::perspective(45.0f, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 100.0f);//FOV, Radio de aspecto,znear,zfar
 	//projection = glm::ortho(0.0f, (GLfloat)screenWidth, 0.0f, (GLfloat)screenHeight, 0.1f, 1000.0f);//Izq,Der,Fondo,Alto,Cercania,Lejania
@@ -215,36 +215,36 @@ int main() {
 		// Render
 		// Clear the colorbuffer
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		// Draw our first triangle
 		ourShader.Use();
-		glm::mat4 model=glm::mat4(1);
-		glm::mat4 view=glm::mat4(1);
-	
-	    view = glm::translate(view, glm::vec3(0.0f,0.0f,-10.0f));
-		
+		glm::mat4 model = glm::mat4(1);
+		glm::mat4 view = glm::mat4(1);
+
+		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -20.0f));
+
 		model = glm::translate(model, glm::vec3(0.0f, -2.5f, 0.0f));
 		model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.1f, 0.1f)); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::scale(model, glm::vec3(2.0f));
 		//view = glm::translate( view, glm::vec3( screenWidth / 2, screenHeight / 2.8,-700.0f ) ); // use with orthographic projection
-		
+
 		GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
 		GLint viewLoc = glGetUniformLocation(ourShader.Program, "view");
 		GLint projecLoc = glGetUniformLocation(ourShader.Program, "projection");
-		
+
 		glUniformMatrix4fv(projecLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		
+
 
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(3.3f, -2.5f, 0.0f));
 		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::scale(model, glm::vec3(2.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -253,22 +253,29 @@ int main() {
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(-3.3f, -2.5f, 0.0f));
 		model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(3.0f, 3.0f, 3.0f));
+		model = glm::scale(model, glm::vec3(2.0f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		 
+
+		model = glm::mat4(1);
+		model = glm::translate(model, glm::vec3(-5.8f, -2.5f, 0.0f));
+		model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // use to compare orthographic and perspective projection
+		model = glm::scale(model, glm::vec3(2.0f));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		// ******** Segunda fila ********
 		model = glm::mat4(1);
-		model = glm::translate(model, glm::vec3(-1.4f, 0.3f, 0.0f));
+		model = glm::translate(model, glm::vec3(-2.2f, -.3f, 0.0f));
 		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(2.5f));
+		model = glm::scale(model, glm::vec3(1.5f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		model = glm::mat4(1);
 		model = glm::translate(model, glm::vec3(1.4f, 0.3f, 0.0f));
 		model = glm::rotate(model, glm::radians(270.0f), glm::vec3(0.0f, 1.0f, 0.0f)); // use to compare orthographic and perspective projection
-		model = glm::scale(model, glm::vec3(2.5f));
+		model = glm::scale(model, glm::vec3(1.5f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -292,7 +299,7 @@ int main() {
 
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
-	
+
 	}
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
@@ -301,7 +308,7 @@ int main() {
 	glfwTerminate();
 	return EXIT_SUCCESS;
 
-  
+
 
 }
 
