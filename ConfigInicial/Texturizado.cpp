@@ -1,6 +1,6 @@
 // Alumno: Armando Luna Juárez 319056323
-// Previo 7. Carga de texturas en OpenGL.
-// Fecha de entrega: 23/09/2025
+// Práctica 7. Carga de texturas en OpenGL.
+// Fecha de entrega: 28/09/2025
 
 #include <iostream>
 #include <cmath>
@@ -101,22 +101,51 @@ int main()
 	Shader lampShader("Shader/lamp.vs", "Shader/lamp.frag");
 
 	// Set up vertex data (and buffer(s)) and attribute pointers
-	GLfloat vertices[] =
-	{
-		// Positions            // Colors              // Texture Coords
-		-0.5f, -0.5f, 0.6f,    1.0f, 1.0f,1.0f,		0.0f,0.0f,
-		0.5f, -0.5f, 0.0f,	   1.0f, 1.0f,1.0f,		1.0f,0.0f,
-		0.5f,  0.5f, 0.0f,     1.0f, 1.0f,1.0f,	    1.0f,1.0f,
-		-0.5f,  0.5f, 0.2f,    1.0f, 1.0f,1.0f,		0.0f,1.0f,
+	GLfloat vertices[] = {
+		//// FRENTE
+		-0.5f,-0.5f, 0.5f, 1,1,1, 0.0f,0.33f,
+		 0.5f,-0.5f, 0.5f, 1,1,1, 0.25f,0.33f,
+		 0.5f, 0.5f, 0.5f, 1,1,1, 0.25f,0.66f,
+		-0.5f, 0.5f, 0.5f, 1,1,1, 0.0f,0.66f,
 
-		
+		// DERECHA
+		 0.5f,-0.5f, 0.5f, 1,1,1, 0.25f,0.33f,
+		 0.5f,-0.5f,-0.5f, 1,1,1, 0.5f,0.33f,
+		 0.5f, 0.5f,-0.5f, 1,1,1, 0.5f,0.66f,
+		 0.5f, 0.5f, 0.5f, 1,1,1, 0.25f,0.66f,
+
+		 // ATRAS
+		 -0.5f,-0.5f,-0.5f, 1,1,1, 0.5f,0.33f,
+		 -0.5f, 0.5f,-0.5f, 1,1,1, 0.75f,0.33f,
+		  0.5f, 0.5f,-0.5f, 1,1,1, 0.75f,0.66f,
+		  0.5f,-0.5f,-0.5f, 1,1,1, 0.5f,0.66f,
+
+		  // IZQUIERDA
+		  -0.5f,-0.5f,-0.5f, 1,1,1, 0.75,0.33f,
+		  -0.5f,-0.5f, 0.5f, 1,1,1, 1.0f,0.33f,
+		  -0.5f, 0.5f, 0.5f, 1,1,1, 1.0f,0.66f,
+		  -0.5f, 0.5f,-0.5f, 1,1,1, 0.75f,0.66f,
+
+		  // ARRIBA
+		  -0.5f, 0.5f, 0.5f, 1,1,1, 0.5f,0.66f,
+		   0.5f, 0.5f, 0.5f, 1,1,1, 0.75f,0.66f,
+		   0.5f, 0.5f,-0.5f, 1,1,1, 0.75f,1.0f,
+		  -0.5f, 0.5f,-0.5f, 1,1,1, 0.5f,1.0f,
+
+		  // ABAJO
+		  -0.5f,-0.5f,-0.5f, 1,1,1, 0.5f,0.0f,
+		   0.5f,-0.5f,-0.5f, 1,1,1, 0.75f,0.0f,
+		   0.5f,-0.5f, 0.5f, 1,1,1, 0.75f,0.33f,
+		  -0.5f,-0.5f, 0.5f, 1,1,1, 0.5f,0.33f,
 	};
 
-	GLuint indices[] =
-	{  // Note that we start from 0!
-		0,1,3,
-		1,2,3
-	
+	GLuint indices[] = {
+		 0,  1,  2,   0,  2,  3,   // frente
+		 4,  5,  6,   4,  6,  7,   // derecha
+		 8,  9, 10,   8, 10, 11,   // atras
+		12, 13, 14,  12, 14, 15,   // izquierda
+		16, 17, 18,  16, 18, 19,   // arriba
+		20, 21, 22,  20, 22, 23    // abajo
 	};
 
 	// First, set the container's VAO (and VBO)
@@ -155,7 +184,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 	// Diffuse map
-	image = stbi_load("images/spidey.png", &textureWidth, &textureHeight, &nrChannels,0);
+	image = stbi_load("images/dado-temp.png", &textureWidth, &textureHeight, &nrChannels,0);
 	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
@@ -210,7 +239,7 @@ int main()
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		// Draw the light object (using light's vertex attributes)
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		// Swap the screen buffers
