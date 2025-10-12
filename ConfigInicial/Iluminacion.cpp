@@ -1,7 +1,7 @@
 // Alumno: Armando Luna Juarez 319056323
-// Fecha: 30/09/2025
-// Previo 8: Iluminacion de un objeto 3D con luz direccional, puntual y de foco
-// Std. Includes
+// Fecha: 12/10/2025
+// Práctica 8: Iluminacion de un objeto 3D con luz direccional, puntual y de foco
+
 #include <string>
 
 // GLEW
@@ -39,6 +39,17 @@ bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
 
+float angDia = 0.0f;                         // ángulo de la luz día (rad)
+float angNoche = glm::radians(180.0f);         // la noche arranca opuesta a la día
+
+float diaV = 0.25f;                        // radianes/seg (ajustable con teclas)
+float nocheV = 0.25f;
+
+float diaR = 3.5f;                        // radio de la órbita (X-Z)
+float nocheR = 3.5f;
+
+float verticalScale = 1.0f;                      // cuánto sube/baja en Y (hemisferio)
+glm::vec3 orbitCenter(0.0f, 0.0f, 0.0f);         // centro de la órbita
 
 // Light attributes
 glm::vec3 lightPos(0.5f, 0.5f, 2.5f);
@@ -49,6 +60,11 @@ GLfloat deltaTime = 0.0f;
 GLfloat lastFrame = 0.0f;
 float rot = 0.0f;
 bool activanim = false;
+bool dia = true;
+float tiltNightDeg = 90.0f;                 // rotación del plano de la órbita nocturna (°). 90 = transversal
+float nightRadiusFactor = 0.5f;             // “a mitad” del radio de la del día
+glm::vec3 tiltAxis = glm::vec3(1.0f, 0.0f, 0.0f); // eje de rotación del plano (X). Cambia a (0,0,1) si prefieres
+
 
 int main()
 {
@@ -108,6 +124,12 @@ int main()
     // Load models
     Model red_dog((char*)"Models/RedDog.obj");
 	Model fantasma((char*)"Models/fantasma.obj");
+	Model playa((char*)"Models/mar.obj");
+	Model buggy((char*)"Models/buggy.obj");
+	Model lentes((char*)"Models/lentes.obj");
+	Model sombrero((char*)"Models/sombrero.obj");
+	Model luna((char*)"Models/moon.obj");
+	Model sol((char*)"Models/sunmap.obj");
     glm::mat4 projection = glm::perspective(camera.GetZoom(), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     float vertices[] = {
@@ -203,6 +225,8 @@ int main()
         GLfloat currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        angDia = fmod(angDia + diaV * deltaTime, glm::two_pi<float>());
+        angNoche = fmod(angNoche + nocheV * deltaTime, glm::two_pi<float>());
 
         // Check and call events
         glfwPollEvents();
@@ -213,55 +237,107 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         
+        // >>> REEMPLAZA EL BLOQUE DE LUCES EN EL RENDER LOOP (ANTES DE DIBUJAR MODELOS)
         lightingShader.Use();
 
         GLint viewPosLoc = glGetUniformLocation(lightingShader.Program, "viewPos");
         glUniform3f(viewPosLoc, camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
-        // Indicar cuántas luces usarás
-        glUniform1i(glGetUniformLocation(lightingShader.Program, "numLights"), 2);
+        // Usaremos solo 1 luz activa (la "día" o la "noche")
+        glUniform1i(glGetUniformLocation(lightingShader.Program, "numLights"), 1);
 
-        glm::vec3 L1 = lightPos + glm::vec3(movelightPos);
-        glUniform3fv(glGetUniformLocation(lightingShader.Program, "lights[0].position"), 1, glm::value_ptr(L1));
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].ambient"), 0.2f, 0.2f, 0.1f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].diffuse"), 0.9f, 0.9f, 0.9f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].specular"), 0.7f, 0.7f, 0.7f);
+        glm::vec3 L1 = orbitCenter + glm::vec3(
+            diaR * cos(angDia),
+            verticalScale * diaR * sin(angDia),   // altura (Y)
+            diaR * sin(angDia)
+        );
 
-        glm::vec3 L2 = lightPos2 + glm::vec3(movelightPos2);
-        glUniform3fv(glGetUniformLocation(lightingShader.Program, "lights[1].position"), 1, glm::value_ptr(L2));
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[1].ambient"), 0.1f, 0.1f, 0.2f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[1].diffuse"), 0.6f, 0.6f, 1.0f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[1].specular"), 0.7f, 0.7f, 1.0f);
+        glm::mat4 Rnight = glm::rotate(glm::mat4(1.0f), glm::radians(tiltNightDeg), glm::normalize(tiltAxis));
 
+        // vector base en el mismo formato que L1 (antes de rotar el plano)
+        glm::vec4 vNight(
+            (nocheR* nightRadiusFactor)* cos(angNoche),
+            verticalScale* (nocheR* nightRadiusFactor)* sin(angNoche),
+            (nocheR* nightRadiusFactor)* sin(angNoche),
+            1.0f
+        );
 
+        // rotamos ese vector para “inclinar” el plano de la órbita
+        vNight = Rnight * vNight;
+
+        glm::vec3 L2 = orbitCenter + glm::vec3(vNight);
+
+        if (dia) {
+            // LUZ DÍA: blanca más intensa (conserva “el color” original pero sube potencia)
+            glUniform3fv(glGetUniformLocation(lightingShader.Program, "lights[0].position"), 1, glm::value_ptr(L1));
+            glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].ambient"), 0.30f, 0.28f, 0.25f);
+            glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].diffuse"), 1.20f, 1.10f, 1.00f);
+            glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].specular"), 1.00f, 0.90f, 0.80f);
+        }
+        else {
+            // LUZ NOCHE: azulada
+            glUniform3fv(glGetUniformLocation(lightingShader.Program, "lights[0].position"), 1, glm::value_ptr(L2));
+            glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].ambient"), 0.05f, 0.10f, 0.20f);
+            glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].diffuse"), 0.30f, 0.50f, 1.00f);
+            glUniform3f(glGetUniformLocation(lightingShader.Program, "lights[0].specular"), 0.40f, 0.60f, 1.00f);
+        }
+
+        // (lo demás de matrices y material se queda igual)
         glm::mat4 view = camera.GetViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // Set material properties
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.8f, 0.8f, 0.8f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.5f, 0.5f, 0.5f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.2f, 0.2f, 0.1f); 
-		glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
+        // Material (igual que ya lo tienes)
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.ambient"), 0.8f, 0.8f, 0.8f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"), 0.2f, 0.2f, 0.1f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 32.0f);
+
 
         // Draw the loaded model
         // --- FANTASMA ---
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -1.75f, -3.0f));
-        model = glm::scale(model, glm::vec3(3.0f));
+        model = glm::scale(model, glm::vec3(0.5f));
+        model = glm::rotate(model, glm::radians(-85.0f), glm::vec3(0, 1, 0));
+        model = glm::translate(model, glm::vec3(0.0f, -0.6f, 1.2f));
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
         fantasma.Draw(lightingShader);
 
         // --- RED_DOG ---
-        glm::mat4 model2 = glm::mat4(1.0f);
-        model2 = glm::translate(model2, glm::vec3(2.0f, -1.75f, -4.0f));  
-        model2 = glm::scale(model2, glm::vec3(1.8f));                      
+        glm::mat4 model2 = glm::mat4(1.0f);                    
         glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model2));
         red_dog.Draw(lightingShader);
         
+		// --- PLAYA ---
+		glm::mat4 model3 = glm::mat4(1.0f);
+		model3 = glm::translate(model3, glm::vec3(-1.8f, -1.0f, -5.0));
+		model3 = glm::scale(model3, glm::vec3(1.0f));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model3));
+		playa.Draw(lightingShader);
 
+		// --- BUGGY ---
+        glm::mat4 model4 = glm::mat4(1.0f);
+        model4 = glm::translate(model4, glm::vec3(-0.3f, -0.5f, 0.28f));
+        model4 = glm::scale(model4, glm::vec3(0.3f));
+        model4 = glm::rotate(model4, glm::radians(60.0f), glm::vec3(0, 1, 0));
+        glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model4));
+        buggy.Draw(lightingShader);
+
+		// --- LENTES ---
+		glm::mat4 model5 = glm::mat4(1.0f);
+		model5 = glm::translate(model5, glm::vec3(0.0f, 0.2f, 0.28f));
+		model5 = glm::scale(model5, glm::vec3(2.0f));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model5));
+		lentes.Draw(lightingShader);
+
+		// --- SOMBRERO ---
+		glm::mat4 model6 = glm::mat4(1.0f);
+		model6 = glm::translate(model6, glm::vec3(0.0f, 0.22f, 0.28f));
+		model6 = glm::scale(model6, glm::vec3(0.3f));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model6));
+		sombrero.Draw(lightingShader);
+        
         glBindVertexArray(0);
-
 
 
 
@@ -269,20 +345,22 @@ int main()
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
         glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // Lámpara de la luz 1
         glm::mat4 lampM = glm::mat4(1.0f);
-        lampM = glm::translate(lampM, L1);
-        lampM = glm::scale(lampM, glm::vec3(0.2f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lampM));
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        // Lámpara de la luz 2
-        lampM = glm::mat4(1.0f);
-        lampM = glm::translate(lampM, L2);
-        lampM = glm::scale(lampM, glm::vec3(0.2f));
-        glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lampM));
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        // Dibuja SOLO la lámpara correspondiente al modo activo
+        if (dia) {
+            lampM = glm::translate(glm::mat4(1.0f), L1);
+            lampM = glm::scale(lampM, glm::vec3(0.2f));  // ajusta escala a tu .obj
+            glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lampM));
+            sol.Draw(lampshader);
+        }
+        else {
+            lampM = glm::translate(glm::mat4(1.0f), L2);
+            lampM = glm::scale(lampM, glm::vec3(0.2f));  // ajusta escala a tu .obj
+            glUniformMatrix4fv(glGetUniformLocation(lampshader.Program, "model"), 1, GL_FALSE, glm::value_ptr(lampM));
+            luna.Draw(lampshader);
+        }
+
 
         glBindVertexArray(0);
 
@@ -327,12 +405,7 @@ void DoMovement()
         if (rot > -90.0f)
             rot -= 0.1f;
     }
-    if (keys[GLFW_KEY_I]) {         
-        movelightPos2 += 0.1f;
-    }
-    if (keys[GLFW_KEY_K]) {   
-        movelightPos2 -= 0.1f;
-    }
+    
 }
 
 // Is called whenever a key is pressed/released via GLFW
@@ -354,17 +427,25 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
             keys[key] = false;
         }
     }
-
+    if (key == GLFW_KEY_M && action == GLFW_PRESS) {
+        dia = !dia;
+    }
     if (keys[GLFW_KEY_O])
     {
        
-        movelightPos += 0.1f;
+        diaV += 0.10f * deltaTime * 2;
     }
 
     if (keys[GLFW_KEY_L])
     {
         
-        movelightPos -= 0.1f;
+        diaV = glm::max(0.0f, diaV - 0.10f * deltaTime);
+    }
+    if (keys[GLFW_KEY_I]) {
+        nocheV += 0.10f * deltaTime * 2;
+    }
+    if (keys[GLFW_KEY_K]) {
+        nocheV = glm::max(0.0f, nocheV - 0.10f * deltaTime);
     }
 
 
