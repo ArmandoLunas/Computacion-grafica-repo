@@ -1,3 +1,7 @@
+// Estudiante: Armando Luna Juarez 319056323
+// Práctica 10: Animación básica con OpenGL
+// Fecha: 26 de octubre de 2025
+
 #include <iostream>
 #include <cmath>
 
@@ -24,6 +28,10 @@
 #include "Camera.h"
 #include "Model.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // Function prototypes
 void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode);
 void MouseCallback(GLFWwindow *window, double xPos, double yPos);
@@ -44,11 +52,36 @@ bool firstMouse = true;
 glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 bool active;
 
-glm::vec3 noseLocal = glm::vec3(0.0f, 0.0f, 0.0f); // AJUSTA según tu modelo del perro
-glm::vec3 ballPos = noseLocal;
-float      ballT = 0.0f;                          
-float      ballSpeed = 0.5f;                          
-int        ballDir = +0.7;
+// --- Órbita perro/pelota ---
+glm::vec3 orbitCenter = glm::vec3(0.0f, 0.0f, 0.0f);
+float     orbitRadius = 2.5f;       // radio de la órbita
+float     dogAngle = 0.0f;       // ángulo perro (rad)
+float     ballAngle = 0.0f;       // ángulo pelota (rad)
+float     angSpeed = 0.8f;       // rad/s
+float     ballYOffset = 2.0f;       // +2 unidades arriba
+
+// --- Impacto / “golpe” al cruzarse ---
+bool  impacting = false;
+float impactTimer = 0.0f;
+const float impactTime = 0.5f; // duración del efecto
+const float dogHitUp = 1.2;  // cuánto sube el perro
+const float dogTiltDeg = -25.0f; // inclinación del perro
+const float ballDipDown = 1.1f;  // cuánto baja la pelota
+const float crossThreshold = 0.4f; // umbral angular para detectar cruce
+float lastCrossTime = -10.0f;       // para enfriar el trigger
+const float crossCooldown = 0.35f;  // evita disparos dobles muy seguidos
+
+// Posiciones calculadas por frame
+glm::vec3 dogPos(0.0f);
+glm::vec3 ballPos(0.0f);
+float     dogYaw = 0.0f; // orientación del perro para “mirar” tangente
+
+
+//glm::vec3 noseLocal = glm::vec3(0.0f, 0.0f, 0.0f); // AJUSTA según tu modelo del perro
+//glm::vec3 ballPos = noseLocal;
+//float      ballT = 0.0f;                          
+//float      ballSpeed = 0.5f;                          
+//int        ballDir = +0.7;
 
 // Positions of the point lights
 glm::vec3 pointLightPositions[] = {
@@ -288,23 +321,43 @@ int main()
 		//Carga de modelo 
         view = camera.GetViewMatrix();	
 		model = glm::mat4(1);
+		//model = glm::scale(model, glm::vec3(0.0f, 0.f, 0.1f));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
 		Piso.Draw(lightingShader);
 
+
 		model = glm::mat4(1);
+
+		// Traslada a la posición orbital (con subida por impacto)
+		model = glm::translate(model, dogPos);
+
+		// Orienta al perro mirando tangente a la órbita (yaw sobre Y)
+		model = glm::rotate(model, dogYaw, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		// Inclinación de golpe (tilt) alrededor del eje X
+		model = glm::rotate(model, glm::radians(dogTiltDeg) * (impacting ? 1.0f : 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 0);
 		Dog.Draw(lightingShader);
 
+
 		model = glm::mat4(1);
-		glEnable(GL_BLEND);//Avtiva la funcionalidad para trabajar el canal alfa
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glUniform1i(glGetUniformLocation(lightingShader.Program, "transparency"), 1);
+
+		// Posición orbital contraria + altura base + rebote del impacto
 		model = glm::translate(model, ballPos);
+
+		// Giro decorativo
+		model = glm::rotate(model, glm::radians(rotBall), glm::vec3(0.0f, 1.0f, 0.0f));
+
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-	    Ball.Draw(lightingShader); 
-		glDisable(GL_BLEND);  //Desactiva el canal alfa 
-		glBindVertexArray(0);
+		Ball.Draw(lightingShader);
+		glDisable(GL_BLEND);
+
 	
 
 		// Also draw the lamp object, again binding the appropriate shader
@@ -441,27 +494,122 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 			Light1 = glm::vec3(0);//Cuado es solo un valor en los 3 vectores pueden dejar solo una componente
 		}
 	}
-	if (keys[GLFW_KEY_N])
+	if (key == GLFW_KEY_N && action == GLFW_PRESS)
 	{
 		AnimBall = !AnimBall;
-		
+
+		if (AnimBall) {
+			// --- REINICIO LIMPIO DE LA ANIMACIÓN NUEVA ---
+			dogAngle = 0.0f;
+			ballAngle = 0.0f;
+			impactTimer = 0.0f;
+			impacting = false;
+			rotBall = 0.0f;
+
+			// Posición inicial visible: perro a +X, pelota opuesta y +2u en Y
+			dogPos = orbitCenter + glm::vec3(orbitRadius, 0.0f, 0.0f);
+			ballPos = orbitCenter + glm::vec3(-orbitRadius, ballYOffset, 0.0f);
+
+			// Perro mirando en la tangente inicial
+			dogYaw = 0.0f; // en X+, su yaw inicial puede ser 0
+		}
+		else {
+			// Si se apaga, regresa al centro (o deja lo que prefieras)
+			dogPos = orbitCenter;
+			ballPos = orbitCenter + glm::vec3(0.0f, ballYOffset, 0.0f);
+		}
 	}
+
 }
+static float twoPi = 6.28318530718f;
+
+auto wrapAngle = [&](float a)->float {
+	// Lleva a [-pi, pi]
+	a = fmodf(a + M_PI, twoPi);
+	if (a < 0) a += twoPi;
+	return a - M_PI;
+	};
+
 void Animation() {
-	if (AnimBall)
-	{
-		ballT += ballDir * ballSpeed * deltaTime;
-
-		if (ballT >= 1.0f) { ballT = 1.0f; ballDir = -1; } // llegó a la luz, regresa
-		if (ballT <= 0.0f) { ballT = 0.0f; ballDir = +1; }
-
-		ballPos = glm::mix(noseLocal, pointLightPositions[0], ballT);
+	if (!AnimBall) {
+		// Sin animación: perro al centro y pelota quieta 2u arriba del centro
+		dogAngle = 0.0f;
+		ballAngle = 0.0f;
+		dogPos = orbitCenter;
+		dogYaw = 0.0f;
+		ballPos = orbitCenter + glm::vec3(0, ballYOffset, 0);
+		impacting = false;
+		impactTimer = 0.0f;
+		return;
 	}
-	else
-	{
-		//rotBall = 0.0f;
+
+	// Avance angular: perro horario, pelota antihorario
+	dogAngle += angSpeed * deltaTime;
+	ballAngle -= angSpeed * deltaTime;
+
+	// Mantener en rango para estabilidad numérica
+	if (dogAngle > twoPi) dogAngle -= twoPi;
+	if (dogAngle < 0.0f)  dogAngle += twoPi;
+	if (ballAngle > twoPi) ballAngle -= twoPi;
+	if (ballAngle < 0.0f)  ballAngle += twoPi;
+
+	// Posiciones base (sin efecto de impacto)
+	glm::vec3 dogBase = orbitCenter + glm::vec3(
+		orbitRadius * cosf(dogAngle),
+		0.0f,
+		orbitRadius * sinf(dogAngle)
+	);
+
+	glm::vec3 ballBase = orbitCenter + glm::vec3(
+		orbitRadius * cosf(ballAngle),
+		ballYOffset,
+		orbitRadius * sinf(ballAngle)
+	);
+
+	// Yaw del perro para “mirar” en dirección tangente a la órbita
+	// Tangente = (-sin, 0, cos). yaw = atan2(x, z)
+	glm::vec3 tang = glm::vec3(-sinf(dogAngle), 0.0f, cosf(dogAngle));
+	dogYaw = atan2f(tang.x, tang.z);
+
+	// ¿Se cruzan? (cuando ángulos ? iguales)
+	float diff = fabsf(wrapAngle(dogAngle - ballAngle));
+	if (diff < crossThreshold && !impacting && (lastFrame - lastCrossTime) > crossCooldown) {
+		impacting = true;
+		impactTimer = 0.0f;
+		lastCrossTime = lastFrame;
 	}
+
+	// Efecto de impacto: ease con seno para subir/inclinar/bajar suavemente
+	float dogY = 0.0f;
+	float tiltFactor = 0.0f;
+	float ballYExtra = 0.0f;
+
+	if (impacting) {
+		impactTimer += deltaTime;
+		float s = glm::clamp(impactTimer / impactTime, 0.0f, 1.0f);
+
+		// Perro sube con ease-out (sinusoidal) y se inclina
+		//  y = sin(s * pi/2) -> sube rápido y suaviza arriba
+		float easeUp = sinf(s * (float)M_PI * 0.5f);
+		dogY = dogHitUp * easeUp;
+		tiltFactor = easeUp; // 0..1
+
+		// Pelota hace “dip” y vuelve: -sin(pi*s) va 0 -> -1 -> 0
+		ballYExtra = -ballDipDown * sinf(s * (float)M_PI);
+
+		if (impactTimer >= impactTime) {
+			impacting = false;
+			impactTimer = 0.0f;
+		}
+	}
+
+	dogPos = dogBase + glm::vec3(0.0f, dogY, 0.0f);
+	ballPos = ballBase + glm::vec3(0.0f, ballYExtra, 0.0f);
+
+	// (opcional) rotación decorativa de la pelota
+	//rotBall += 60.0f * deltaTime; // grados/seg
 }
+
 
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 {

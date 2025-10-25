@@ -1,0 +1,282 @@
+# Blender 4.5.3 LTS MTL File: 'galeria.blend'
+# www.blender.org
+
+newmtl Material.007
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Worn_Wooden_Planks_whnfbg3_1K_BaseColor.jpg
+map_Ks Worn_Wooden_Planks_whnfbg3_1K_Specular.jpg
+
+newmtl Material.008
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.009
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.010
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.011
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.012
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.013
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.014
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Rusty_Metal_Sheet_tj4kedvcw_1K_BaseColor.jpg
+map_Ks Rusty_Metal_Sheet_tj4kedvcw_1K_Specular.jpg
+
+newmtl Material.016
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Wall_Paint_qj2luvs0_1K_BaseColor.jpg
+map_Ks Wall_Paint_qj2luvs0_1K_Specular.jpg
+
+newmtl Material.017
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Wall_Paint_qj2luvs0_1K_BaseColor.jpg
+map_Ks Wall_Paint_qj2luvs0_1K_Specular.jpg
+
+newmtl Material.018
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Wall_Paint_qj2luvs0_1K_BaseColor.jpg
+map_Ks Wall_Paint_qj2luvs0_1K_Specular.jpg
+
+newmtl Material.019
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Rusty_Metal_Sheet_tj4kedvcw_1K_BaseColor.jpg
+map_Ks Rusty_Metal_Sheet_tj4kedvcw_1K_Specular.jpg
+
+newmtl Material.020
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Rusty_Metal_Sheet_tj4kedvcw_1K_BaseColor.jpg
+map_Ks Rusty_Metal_Sheet_tj4kedvcw_1K_Specular.jpg
+
+newmtl Material.021
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Rusty_Metal_Sheet_tj4kedvcw_1K_BaseColor.jpg
+map_Ks Rusty_Metal_Sheet_tj4kedvcw_1K_Specular.jpg
+
+newmtl Material.023
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.024
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.025
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.026
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.029
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.030
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.031
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Smooth_Precast_Concrete_sekjcawb_1K_BaseColor.jpg
+map_Ks Smooth_Precast_Concrete_sekjcawb_1K_Specular.jpg
+
+newmtl Material.032
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd Wall_Paint_qj2luvs0_1K_BaseColor.jpg
+map_Ks Wall_Paint_qj2luvs0_1K_Specular.jpg
+
+newmtl Material.034
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd bote.png
+
+newmtl Material.035
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd tren.png
+
+newmtl Material.036
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd zac.png
+
+newmtl Material.037
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd ojo.png
+
+newmtl Material.038
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl marco2
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd marco2.png
+map_d marco2.png
