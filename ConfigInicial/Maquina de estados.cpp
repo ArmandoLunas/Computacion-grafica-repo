@@ -1,10 +1,12 @@
 // Alumno: Armando Luna Juárez 319056323
-// Previo 11: Animacion con maquina de estados
-// Fecha: 28/10/2025
+// Práctica 11: Animación con máquina de estados
+// Fecha: 03/11/2025
 
 #include <iostream>
 #include <cmath>
 
+#include <vector>
+#include <algorithm>
 // GLEW
 #include <GL/glew.h>
 
@@ -117,7 +119,18 @@ glm::vec3 dogPos (0.0f,0.0f,0.0f);
 float dogRot = 0.0f;
 bool step = false;
 
+std::vector<glm::vec2> dogPath = {
+	{0.0f,  2.25f},  // sube por +Z hasta z=2.25
+	{2.25f, 2.25f},  // gira 90° y avanza por +X hasta x=2.25
+	{2.25f,-2.5f},   // gira 180° y baja por -Z hasta z=-4
+	{0.0f,  0.0f}    // vuelve al centro y repite el ciclo
+};
+int   dogWp = 0;       // índice del waypoint actual
+float dogStep = 0.007f;  // avance por frame (igual a tu valor original)
+float dogArriveEps = 0.01f;
 
+float dogTurnEarlyDist = 0.5f;
+float dogTurnSpeedDeg = 180.0f; // grados por segundo (ajústalo a gusto)
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -505,33 +518,27 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mode
 	}
 	if (keys[GLFW_KEY_B])
 	{
-		dogAnim = 1;
+		dogAnim = (dogAnim == 1 ? 0 : 1);
 
 	}
 }
 void Animation() {
-	if (AnimBall)
-	{
+	if (AnimBall) {
 		rotBall += 0.4f;
-		//printf("%f", rotBall);
 	}
-	
-	if (AnimDog)
-	{
+	if (AnimDog) {
 		rotDog -= 0.6f;
-		//printf("%f", rotBall);
 	}
-	
+
 	if (dogAnim == 1) {
+		// --- Ciclo de paso (igual que tenías) ---
 		if (!step) {
 			if (FLegs < 30.0f && RLegs > -30.0f) {
 				FLegs += 0.6f;
 				RLegs -= 0.6f;
 				head += 0.2f;
 				tail -= 0.2f;
-				if (FLegs >= 30.0f) {
-					step = true;
-				}
+				if (FLegs >= 30.0f) step = true;
 			}
 		}
 		else {
@@ -540,23 +547,65 @@ void Animation() {
 				RLegs += 0.6f;
 				head -= 0.2f;
 				tail += 0.2f;
-				if (FLegs <= -30.0f) {
-					step = false;
-				}
+				if (FLegs <= -30.0f) step = false;
 			}
 		}
-		if (dogPos.z < 2.25f) {
-			dogPos.z += 0.01f;
+
+		glm::vec2 pos(dogPos.x, dogPos.z);
+		glm::vec2 target = dogPath[dogWp];
+
+		glm::vec2 toT = target - pos;
+		float dist = glm::length(toT);
+
+		if (dist < dogArriveEps) {
+			dogWp = (dogWp + 1) % static_cast<int>(dogPath.size()); 
+			target = dogPath[dogWp];
+			toT = target - pos;
+			dist = glm::length(toT);
 		}
-		else {
-			FLegs = 0.0f;
-			RLegs = 0.0f;
-			head = 0.0f;
-			tail = 0.0f;
+
+		if (dist > 0.0f) {
+			glm::vec2 dir = toT / dist;
+			float stepLen = dogStep;
+			if (stepLen > dist) stepLen = dist;
+
+			pos += dir * stepLen;
+
+			dogPos.x = pos.x;
+			dogPos.z = pos.y;
+
+			// --- ANTICIPACIÓN DE GIRO ---
+			// Si estamos cerca del punto actual, mirar hacia el siguiente waypoint
+			glm::vec2 nextTarget = target;
+			if (dist < dogTurnEarlyDist) {
+				int nextWp = (dogWp + 1) % static_cast<int>(dogPath.size());
+				nextTarget = dogPath[nextWp];
+			}
+
+			glm::vec2 dirLook = glm::normalize(nextTarget - pos);
+			float targetYawDeg = glm::degrees(std::atan2(dirLook.x, dirLook.y));
+
+
+			// Diferencia de ángulo tomando el camino corto (-180, 180]
+			float delta = targetYawDeg - dogRot;
+			if (delta > 180.0f)  delta -= 360.0f;
+			if (delta < -180.0f) delta += 360.0f;
+
+			// Paso máximo permitido este frame (usa tu deltaTime global)
+			float maxStep = dogTurnSpeedDeg * deltaTime;
+
+			// Aplica un paso hacia el objetivo (sin pasarte)
+			if (std::abs(delta) <= maxStep) {
+				dogRot = targetYawDeg;          // ya llegó
+			}
+			else {
+				dogRot += (delta > 0.0f ? maxStep : -maxStep);
+			}
+
 		}
 	}
-	
 }
+
 
 void MouseCallback(GLFWwindow *window, double xPos, double yPos)
 {
